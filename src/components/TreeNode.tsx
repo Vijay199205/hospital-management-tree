@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import useTreeStore, { TreeNode } from "../store/treeStore";
+import "../styles/treenode.css"
 
 type TreeNodeProps = {
   node: TreeNode;
@@ -21,7 +22,12 @@ const TreeNodeComponent: React.FC<TreeNodeProps> = ({ node }) => {
 
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
-    setMenuPosition({ x: event.clientX, y: event.clientY });
+    
+    // Ensure menu does not overflow viewport
+    const offsetX = event.pageX + 150 > window.innerWidth ? window.innerWidth - 160 : event.pageX;
+    const offsetY = event.pageY + 120 > window.innerHeight ? window.innerHeight - 130 : event.pageY;
+  
+    setMenuPosition({ x: offsetX, y: offsetY });
     setMenuOpen(true);
   };
 
@@ -83,16 +89,20 @@ const TreeNodeComponent: React.FC<TreeNodeProps> = ({ node }) => {
       </div>
 
       {menuOpen && (
-        <ul
-          className="context-menu list-group shadow-sm rounded bg-white list-unstyled"
-          style={{
-            position: "absolute",
-            zIndex: 1000,
-            top: menuPosition.y,
-            left: menuPosition.x,
-          }}
-          onMouseLeave={handleCloseContextMenu}
-        >
+       <ul
+       className="context-menu list-group shadow-sm rounded bg-white"
+       style={{
+         position: "fixed",
+         zIndex: 1000,
+         top: `${menuPosition.y}px`,
+         left: `${menuPosition.x}px`,
+         minWidth: "180px",
+         boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+         borderRadius: "8px",
+         padding: "5px 0"
+       }}
+       onMouseLeave={handleCloseContextMenu}
+     >
           <li className="list-group-item" onClick={handleEdit}>
             ✏️ Edit group
           </li>
@@ -112,15 +122,13 @@ const TreeNodeComponent: React.FC<TreeNodeProps> = ({ node }) => {
         </ul>
       )}
 
-      {node.children.length > 0 && (
-        <ul>
-          {node.children.map((child) => (
-            <li key={child.id}>
-              <TreeNodeComponent node={child} />
-            </li>
-          ))}
-        </ul>
-      )}
+{node.children.length > 0 && (
+  <div className="child-nodes">
+    {node.children.map((child) => (
+      <TreeNodeComponent key={child.id} node={child} />
+    ))}
+  </div>
+)}
     </div>
   );
 };

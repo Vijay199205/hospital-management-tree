@@ -1,0 +1,40 @@
+.tree-node {
+    position: relative;
+    padding-left: 20px; /* Space for the dotted line */
+  }
+  
+  .tree-node::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10px; /* Align with the parent */
+    width: 1px;
+    height: 100%;
+    border-left: 1px dashed #ccc; /* Dotted vertical line */
+  }
+  
+  .tree-node:last-child::before {
+    height: 50%; /* Stops the line at the last child */
+  }
+  
+  .tree-node .node-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .tree-node .node-content::before {
+    content: "";
+    position: absolute;
+    left: -10px; /* Connect to parent */
+    top: 50%;
+    width: 10px;
+    border-top: 1px dashed #ccc; /* Dotted horizontal line */
+  }
+  
+  /* Child container with no extra list elements */
+  .child-nodes {
+    margin-left: 20px;
+    position: relative;
+  }
+  
